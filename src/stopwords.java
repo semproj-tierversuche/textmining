@@ -1,14 +1,10 @@
 /**
- *  Codeschnipsel um Stopwörter zu löschen
+ *  Codeschnipsel um Stopwoerter zu loeschen
  */
-package textmining.src;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;

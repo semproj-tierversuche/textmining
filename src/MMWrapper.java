@@ -14,10 +14,11 @@ public class MMWrapper {
      */
      static String fwdToMMtest(String host, String input){
 
-        MetaMapApi mmapi = new MetaMapApiImpl(host);
+        MetaMapApi mmapi = new MetaMapApiImpl();
         mmapi.setOptions("-b"); //getting all TODO figure out which options exactly we will need
         List<Result> resultList = mmapi.processCitationsFromString(input);
         Result res = resultList.get(0);
         return res.getMachineOutput();
     }
+
 }
