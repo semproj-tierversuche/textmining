@@ -18,7 +18,7 @@ import java.util.*;
 
 public class TMServer {
 
-    //config Vars
+    //Config Vars
     private static String HOSTNAME;
     private static int PORT;
     //HTML Vars
@@ -33,8 +33,8 @@ public class TMServer {
     private static final int STATUS_METHOD_NOT_ALLOWED = 405;
 
     /**
-     * Gets the configs from the config file
-     * @param configDir the dir and filename where to find the config
+     * Gets the configs from the Config file
+     * @param configDir the dir and filename where to find the Config
      */
     private static void getProperties(String configDir){
         Properties prop = new Properties();

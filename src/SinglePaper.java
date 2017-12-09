@@ -1,6 +1,14 @@
+/*
+ * @version: 2017v1
+ */
+
+
+
 public class SinglePaper {
     String id;              //here pubmed ID
+    String title;
     String meshHeadings;
+    String mm_meshHeadings;
     String chemicalList;
     String paperAbstract;
     String keywords;

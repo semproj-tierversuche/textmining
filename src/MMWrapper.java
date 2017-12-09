@@ -1,3 +1,7 @@
+/*
+ * @version: 2017v1
+ */
+
 import gov.nih.nlm.nls.metamap.MetaMapApi;
 import gov.nih.nlm.nls.metamap.MetaMapApiImpl;
 import gov.nih.nlm.nls.metamap.Result;
@@ -14,13 +18,15 @@ public class MMWrapper {
     }
 
     void runMeshHeadings(List<SinglePaper> input){
+
+        MetaMapApi mmapi = new MetaMapApiImpl();
+        mmapi.setOptions(c.mm_MeshHeading_opt);
+
         input.forEach( tmpPaper -> {
             if (!tmpPaper.meshHeadings.isEmpty()) {
-                MetaMapApi mmapi = new MetaMapApiImpl();
-                mmapi.setOptions(c.mm_MeshHeading_opt);
                 List<Result> resultList = mmapi.processCitationsFromString(tmpPaper.meshHeadings);
                 Result res = resultList.get(0);
-                tmpPaper.meshHeadings = res.getMachineOutput();
+                tmpPaper.mm_meshHeadings = res.getMachineOutput();
             }
         });
     }
