@@ -2,15 +2,18 @@
  * @version: 2017v1
  */
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class TMCommandline {
 
     private static String ConfigDir = "src/config.properties";
 
     private static void runSingleFile(Config c, String dirToBioC){
-
-        BioCReader.bioCtoSinglePaper(dirToBioC);
-
-        TextMiningPipeline tmp = new TextMiningPipeline(c, " ");//TODO
+        List<SinglePaper> spList = new ArrayList<>();
+        SinglePaper sp = BioCReader.bioCtoSinglePaper(dirToBioC);
+        spList.add(sp);
+        TextMiningPipeline tmp = new TextMiningPipeline(c, spList);//TODO
         tmp.run();
         String out = tmp.getOutput().toString();
         System.out.println(out);

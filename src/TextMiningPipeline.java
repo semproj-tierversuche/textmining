@@ -6,12 +6,12 @@ import java.util.List;
 
 public class TextMiningPipeline implements Runnable{
 
-	private Object input;	//TODO decide on proper input type
+	private List<SinglePaper> input;	//TODO decide on proper input type
 	private List<SinglePaper> siIn;
 	private Config c;
 	private Object output;	//TODO decide on proper output type
 
-	TextMiningPipeline(Config c, Object input){ //TODO decide on proper input type
+	TextMiningPipeline(Config c, List<SinglePaper> input){ //TODO decide on proper input type
 		this.c = c;
 		this.input = input;
 	}
@@ -39,7 +39,7 @@ public class TextMiningPipeline implements Runnable{
 		//delete Stopwords
 
 		//run through metamap TODO Think about Multithreading
-		mmw.runMeshHeadings(siIn);
+		mmw.runMeshHeadings(input);
 
 		//run through semrep
 
