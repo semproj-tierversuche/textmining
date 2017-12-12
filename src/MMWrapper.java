@@ -26,7 +26,20 @@ public class MMWrapper {
             if (!tmpPaper.meshHeadings.isEmpty()) {
                 List<Result> resultList = mmapi.processCitationsFromString(tmpPaper.meshHeadings);
                 Result res = resultList.get(0);
-                tmpPaper.mm_meshHeadings = res.getMachineOutput();
+                tmpPaper.meshHeadings = res.getMachineOutput();
+            }
+        });
+    }
+
+    void runAbstracts(List<SinglePaper> input){
+        MetaMapApi mmapi = new MetaMapApiImpl();
+        mmapi.setOptions(c.mm_Abstract_opt);
+
+        input.forEach(tmpPaper -> {
+            if(!tmpPaper.paperAbstract.isEmpty()){
+                List<Result> resultList = mmapi.processCitationsFromString(tmpPaper.paperAbstract);
+                Result res = resultList.get(0);
+                tmpPaper.paperAbstract = res.getMachineOutput();
             }
         });
     }

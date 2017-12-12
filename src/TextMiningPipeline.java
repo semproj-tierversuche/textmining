@@ -6,18 +6,16 @@ import java.util.List;
 
 public class TextMiningPipeline implements Runnable{
 
-	private List<SinglePaper> input;	//TODO decide on proper input type
-	private List<SinglePaper> siIn;
+	private List<SinglePaper> spList;	//TODO decide on proper input type
 	private Config c;
-	private Object output;	//TODO decide on proper output type
 
-	TextMiningPipeline(Config c, List<SinglePaper> input){ //TODO decide on proper input type
+	TextMiningPipeline(Config c, List<SinglePaper> input){
 		this.c = c;
-		this.input = input;
+		this.spList = input;
 	}
 
-	Object getOutput(){
-		return output;
+	List<SinglePaper> getSpList(){
+		return spList;
 	}
 
 	/**
@@ -39,8 +37,8 @@ public class TextMiningPipeline implements Runnable{
 		//delete Stopwords
 
 		//run through metamap TODO Think about Multithreading
-		mmw.runMeshHeadings(input);
-
+		mmw.runMeshHeadings(spList);
+		mmw.runAbstracts(spList);
 		//run through semrep
 
 		//turn intoBioc

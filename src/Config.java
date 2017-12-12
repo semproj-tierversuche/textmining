@@ -11,6 +11,9 @@ public class Config {
     String metamap_host;
     String mm_Abstract_opt;
     String mm_MeshHeading_opt;
+    String input_divider;
+    String output_divider;
+    String end_of_Stream;
 
     /**
      * Gets the configs from the Config file
@@ -34,6 +37,9 @@ public class Config {
             metamap_host = prop.getProperty("metamap_host");
             mm_Abstract_opt = prop.getProperty("mm_Abstract_opt");
             mm_MeshHeading_opt = prop.getProperty("mm_MeshHeading_opt");
+            input_divider = prop.getProperty("input_divider");
+            output_divider = prop.getProperty("output_divider");
+            end_of_Stream = prop.getProperty("end_of_Stream");
 
         } catch (IOException ex) {
             ex.printStackTrace();
