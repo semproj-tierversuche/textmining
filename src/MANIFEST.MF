@@ -1,4 +1,4 @@
 Manifest-Version: 1.0
 Created-By: 1.8.0_151  (Oracle Corporation)
-Main-Class: TextMiningPipeline
-Class-Path: pl-src/assets/metamap-api-2.0-jar-with-dependencies.jar
+Main-Class: TMCommandline
+Class-Path: pl-src/assets/metamap-api-2.0-jar-with-dependencies.jar pl-src/assets/jdom-2.0.6/jdom-2.0.6.jar
