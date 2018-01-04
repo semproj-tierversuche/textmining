@@ -11,7 +11,7 @@ public class Config {
     String metamap_host;
     String mm_Abstract_opt;
     String mm_MeshHeading_opt;
-    String input_divider;
+    String file_delimiter;
     String output_divider;
     String end_of_Stream;
 
@@ -20,13 +20,18 @@ public class Config {
      * the dir and filename where to find the Config
      *
      * @param dir the directory of the config file
+     * @param externalConfig if the config is loaded externally
      */
-    Config(String dir){
+     Config(String dir, boolean externalConfig){
         Properties prop = new Properties();
         InputStream input = null;
         try {
 
-            input = new FileInputStream(dir);
+            if(externalConfig){
+                input = new FileInputStream(dir);
+            }else {
+                input = this.getClass().getResourceAsStream(dir);
+            }
 
             // load a properties file
             prop.load(input);
@@ -37,7 +42,7 @@ public class Config {
             metamap_host = prop.getProperty("metamap_host");
             mm_Abstract_opt = prop.getProperty("mm_Abstract_opt");
             mm_MeshHeading_opt = prop.getProperty("mm_MeshHeading_opt");
-            input_divider = prop.getProperty("input_divider");
+            file_delimiter = prop.getProperty("file_delimiter");
             output_divider = prop.getProperty("output_divider");
             end_of_Stream = prop.getProperty("end_of_Stream");
 

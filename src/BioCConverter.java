@@ -9,7 +9,7 @@ import org.jdom2.input.SAXBuilder;
 import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
 
-import java.io.File;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.List;
 
@@ -25,7 +25,7 @@ public class BioCConverter {
     static SinglePaper bioCFileToSP(String xmlDir){
         try {
             SAXBuilder saxBuilder = new SAXBuilder();
-            Document doc = saxBuilder.build(new File(xmlDir));
+            Document doc = saxBuilder.build(xmlDir);
             return bioCtoSinglePaper(doc);
         }catch (Exception e){
             e.printStackTrace();
@@ -34,13 +34,13 @@ public class BioCConverter {
     }
 
     /**
-     * @param bioC read in file as String
+     * @param bioCIN read in file as inputStream
      * @return null if failed otherwise a SingePaper
      */
-    static SinglePaper bioCStringToSP(String bioC){
+    static SinglePaper bioCStreamToSP(InputStream bioCIN){
         try {
             SAXBuilder saxBuilder = new SAXBuilder();
-            Document doc = saxBuilder.build(bioC);
+            Document doc = saxBuilder.build(bioCIN);
             return bioCtoSinglePaper(doc);
         }catch (Exception e){
             e.printStackTrace();

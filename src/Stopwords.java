@@ -10,7 +10,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 
-public class stopwords{
+public class Stopwords{
 	public void removeStopwords(String s) throws IOException {
 		FileReader fr = new FileReader("assets/stopwords.txt");
 		BufferedReader br = new BufferedReader(fr);

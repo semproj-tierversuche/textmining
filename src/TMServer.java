@@ -105,12 +105,12 @@ public class TMServer {
                         he.getResponseBody().write(rawResponseBody);
                         break;
                     case METHOD_OPTIONS:
-                        headers.set(HEADER_ALLOW, ALLOWED_METHODS);
-                        he.sendResponseHeaders(STATUS_OK, NO_RESPONSE_LENGTH);
+                       // headers.set(HEADER_ALLOW, ALLOWED_METHODS);
+                        //he.sendResponseHeaders(STATUS_OK, NO_RESPONSE_LENGTH);
                         break;
                     default:
-                        headers.set(HEADER_ALLOW, ALLOWED_METHODS);
-                        he.sendResponseHeaders(STATUS_METHOD_NOT_ALLOWED, NO_RESPONSE_LENGTH);
+                        //headers.set(HEADER_ALLOW, ALLOWED_METHODS);
+                        //he.sendResponseHeaders(STATUS_METHOD_NOT_ALLOWED, NO_RESPONSE_LENGTH);
                         break;
                 }
             } finally {
