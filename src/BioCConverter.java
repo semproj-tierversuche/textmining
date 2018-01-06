@@ -3,6 +3,7 @@
  */
 
 import org.jdom2.Attribute;
+import org.jdom2.DocType;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.input.SAXBuilder;
@@ -38,9 +39,10 @@ public class BioCConverter {
      * @return null if failed otherwise a SingePaper
      */
     static SinglePaper bioCStreamToSP(InputStream bioCIN){
+        DocType dT = new DocType("BioC.dtd","BioC.dtd","BioC.dtd");
         try {
             SAXBuilder saxBuilder = new SAXBuilder();
-            Document doc = saxBuilder.build(bioCIN);
+            Document doc = saxBuilder.build(bioCIN).setDocType(dT);
             return bioCtoSinglePaper(doc);
         }catch (Exception e){
             e.printStackTrace();

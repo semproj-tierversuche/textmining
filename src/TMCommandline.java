@@ -4,7 +4,6 @@
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,22 +20,22 @@ public class TMCommandline {
      */
     private static void runMultiFiles(){
         List<SinglePaper> spList = new ArrayList<>();
-        Scanner s_in = new Scanner(System.in).useDelimiter(c.file_delimiter);
+        Scanner s_in = new Scanner(System.in);//TODO FIX --- delimiter can not be used, because otherwise we have issues exiting whithout using the end file symbol
 
         InputStream tmp_is;
+        StringBuilder tmp_strBl = new StringBuilder();
         String tmp_str;
 
-        while(!s_in.hasNext(c.end_of_Stream)) {     //TODO: while true and end progam with input
+        while(!s_in.hasNext(c.end_of_Stream)) {     //TODO:fix this and get a proper EXIT !!
+            tmp_str = s_in.nextLine();
+            if(tmp_str.equals(c.file_delimiter)){
 
-            if(s_in.hasNext()){
-                tmp_str = s_in.next();
-                try {
-                    tmp_is = new ByteArrayInputStream(tmp_str.getBytes(StandardCharsets.UTF_8.name())); //converting into Stream because saxbuilder does not take strings
-                    SinglePaper spaper = BioCConverter.bioCStreamToSP(tmp_is);//adding current file to the SinglePaper collection
-                    spList.add(spaper);
-                }catch (UnsupportedEncodingException e){
-                    e.printStackTrace();
-                }
+                tmp_is = new ByteArrayInputStream(tmp_strBl.toString().getBytes(StandardCharsets.UTF_8)); //converting into Stream because saxbuilder does not take strings
+                SinglePaper spaper = BioCConverter.bioCStreamToSP(tmp_is);      //adding current file to the SinglePaper collection
+                spList.add(spaper);
+
+            }else{
+                tmp_strBl.append(tmp_str);
             }
         }
 

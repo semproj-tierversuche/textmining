@@ -23,7 +23,7 @@ public class MMWrapper {
         mmapi.setOptions(c.mm_MeshHeading_opt);
 
         input.forEach( tmpPaper -> {
-            if (!tmpPaper.meshHeadings.isEmpty()) {
+            if (tmpPaper.meshHeadings != null && !tmpPaper.meshHeadings.isEmpty()) {
                 List<Result> resultList = mmapi.processCitationsFromString(tmpPaper.meshHeadings);
                 Result res = resultList.get(0);
                 tmpPaper.meshHeadings = res.getMachineOutput();
@@ -36,7 +36,7 @@ public class MMWrapper {
         mmapi.setOptions(c.mm_Abstract_opt);
 
         input.forEach(tmpPaper -> {
-            if(!tmpPaper.paperAbstract.isEmpty()){
+            if(tmpPaper.paperAbstract != null && !tmpPaper.paperAbstract.isEmpty()){
                 List<Result> resultList = mmapi.processCitationsFromString(tmpPaper.paperAbstract);
                 Result res = resultList.get(0);
                 tmpPaper.paperAbstract = res.getMachineOutput();
