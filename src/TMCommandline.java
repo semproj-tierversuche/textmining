@@ -20,13 +20,13 @@ public class TMCommandline {
      */
     private static void runMultiFiles(){
         List<SinglePaper> spList = new ArrayList<>();
-        Scanner s_in = new Scanner(System.in);//TODO FIX --- delimiter can not be used, because otherwise we have issues exiting whithout using the end file symbol
+        Scanner s_in = new Scanner(System.in);
 
         InputStream tmp_is;
         StringBuilder tmp_strBl = new StringBuilder();
         String tmp_str;
 
-        while(!s_in.hasNext(c.end_of_Stream)) {     //TODO:fix this and get a proper EXIT !!
+        while(!s_in.hasNext(c.end_of_Stream)) {
             tmp_str = s_in.nextLine();
             if(tmp_str.equals(c.file_delimiter)){
 

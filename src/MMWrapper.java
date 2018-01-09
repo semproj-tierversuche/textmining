@@ -46,11 +46,10 @@ public class MMWrapper {
 
     /**
      * first test to see if components work together
-     * @param host  host:port
      * @param input text to metamap
      * @return mined string
      */
-     String fwdToMMtest(String host, String input){
+     String fwdToMMtest(String input){
 
         MetaMapApi mmapi = new MetaMapApiImpl();
         mmapi.setOptions("-b"); //getting all TODO figure out which options exactly we will need
