@@ -85,26 +85,32 @@ public class BioCConverter {
 
         Element rootEle = new Element("collection");
         Document doc = new Document(rootEle);
-        doc.setRootElement(rootEle);
 
         Element docEle = new Element("document");
         doc.getRootElement().addContent(docEle);
 
         //Adding Title to the BioC XML
-        Element passOne_Ele = new Element("passage");
-        Element infon_Title_Ele = new Element("infon");
-        infon_Title_Ele.setAttribute(new Attribute("key","type"));
-        infon_Title_Ele.setText("title");
-        passOne_Ele.addContent(infon_Title_Ele);
-        passOne_Ele.addContent(new Element("text").setText(sp.title));
+        if(sp.title != null){
+            Element passOne_Ele = new Element("passage");
+            Element infon_Title_Ele = new Element("infon");
+            infon_Title_Ele.setAttribute(new Attribute("key","type"));
+            infon_Title_Ele.setText("title");
+            passOne_Ele.addContent(infon_Title_Ele);
+            passOne_Ele.addContent(new Element("text").setText(sp.title));
+            docEle.addContent(passOne_Ele);
+        }
 
         //Adding Abstract to the BioC XML
-        Element passZwo_Ele = new Element("passage");
-        Element infon_Abstr_Ele = new Element("infon");
-        infon_Abstr_Ele.setAttribute("key","type");
-        infon_Abstr_Ele.setText("abstract");
-        passZwo_Ele.addContent(infon_Abstr_Ele);
-        passZwo_Ele.addContent(new Element("text").setText(sp.title));
+        if(sp.paperAbstract != null){
+            Element passZwo_Ele = new Element("passage");
+            Element infon_Abstr_Ele = new Element("infon");
+            infon_Abstr_Ele.setAttribute("key","type");
+            infon_Abstr_Ele.setText("abstract");
+            passZwo_Ele.addContent(infon_Abstr_Ele);
+            passZwo_Ele.addContent(new Element("text").setText(sp.paperAbstract));
+            docEle.addContent(passZwo_Ele);
+        }
+
 
         // new XMLOutputter().output(doc, System.out);
         XMLOutputter xmlOutput = new XMLOutputter();

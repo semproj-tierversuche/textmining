@@ -33,7 +33,7 @@ public class MMWrapper {
 
     void runAbstracts(List<SinglePaper> input){
         MetaMapApi mmapi = new MetaMapApiImpl();
-        mmapi.setOptions(c.mm_Abstract_opt);
+       // mmapi.setOptions(c.mm_Abstract_opt);        //TODO figure out which options can be used with which library
 
         input.forEach(tmpPaper -> {
             if(tmpPaper.paperAbstract != null && !tmpPaper.paperAbstract.isEmpty()){

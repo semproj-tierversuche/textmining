@@ -27,13 +27,14 @@ public class TMCommandline {
         String tmp_str;
 
         while(!s_in.hasNext(c.end_of_Stream)) {
+
             tmp_str = s_in.nextLine();
             if(tmp_str.equals(c.file_delimiter)){
 
                 tmp_is = new ByteArrayInputStream(tmp_strBl.toString().getBytes(StandardCharsets.UTF_8)); //converting into Stream because saxbuilder does not take strings
                 SinglePaper spaper = BioCConverter.bioCStreamToSP(tmp_is);      //adding current file to the SinglePaper collection
                 spList.add(spaper);
-
+                tmp_strBl.setLength(0); //setting back string builder, for new file
             }else{
                 tmp_strBl.append(tmp_str);
             }
