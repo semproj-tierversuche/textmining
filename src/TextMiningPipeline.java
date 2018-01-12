@@ -37,7 +37,7 @@ public class TextMiningPipeline implements Runnable{
 		//delete Stopwords
 
 		//run through metamap TODO Think about Multithreading
-		mmw.runMeshHeadings(spList);
+		//mmw.runMeshHeadings(spList);
 		mmw.runAbstracts(spList);
 		//run through semrep
 

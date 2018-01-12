@@ -47,6 +47,7 @@ public class BioCConverter {
         }catch (Exception e){
             e.printStackTrace();
         }
+        System.err.println("Should have not reached this statement!\nString that couldn't be converted:"+bioCIN.toString());
         return null;
     }
 

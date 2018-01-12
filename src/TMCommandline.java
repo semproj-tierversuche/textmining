@@ -19,6 +19,8 @@ public class TMCommandline {
      * reads from Standard IN runs TM tools and pushes everything to stdOUT
      */
     private static void runMultiFiles(){
+        int filesProcessed=0;
+        long startTime = System.currentTimeMillis();
         List<SinglePaper> spList = new ArrayList<>();
         Scanner s_in = new Scanner(System.in);
 
@@ -31,9 +33,12 @@ public class TMCommandline {
             tmp_str = s_in.nextLine();
             if(tmp_str.equals(c.file_delimiter)){
 
-                tmp_is = new ByteArrayInputStream(tmp_strBl.toString().getBytes(StandardCharsets.UTF_8)); //converting into Stream because saxbuilder does not take strings
+                tmp_is = new ByteArrayInputStream(tmp_strBl.toString().getBytes(StandardCharsets.US_ASCII)); //converting into Stream because saxbuilder does not take strings, must be ASCII for Metamap
                 SinglePaper spaper = BioCConverter.bioCStreamToSP(tmp_is);      //adding current file to the SinglePaper collection
-                spList.add(spaper);
+                if(spaper != null){
+                    spList.add(spaper);
+                    filesProcessed++;
+                }
                 tmp_strBl.setLength(0); //setting back string builder, for new file
             }else{
                 tmp_strBl.append(tmp_str);
@@ -49,6 +54,8 @@ public class TMCommandline {
         } );
         System.out.print("\n"+c.end_of_Stream+"\n");
 
+        long time_needed = System.currentTimeMillis() - startTime;
+        System.out.println("Time needed in ms: "+ time_needed+" --- files processed: "+filesProcessed);
         System.exit(0);
     }
 
