@@ -2,6 +2,8 @@
  * @version: 2017v1
  */
 
+import org.apache.commons.text.StringEscapeUtils;
+
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -30,7 +32,7 @@ public class TMCommandline {
 
         while(!s_in.hasNext(c.end_of_Stream)) {
 
-            tmp_str = s_in.nextLine();
+            tmp_str = StringEscapeUtils.unescapeXml(s_in.nextLine()); //gets rid of the XML escape sequences
             if(tmp_str.equals(c.file_delimiter)){
 
                 tmp_is = new ByteArrayInputStream(tmp_strBl.toString().getBytes(StandardCharsets.US_ASCII)); //converting into Stream because saxbuilder does not take strings, must be ASCII for Metamap
