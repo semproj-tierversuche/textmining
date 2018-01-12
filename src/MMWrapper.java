@@ -1,5 +1,5 @@
 /*
- * @version: 2017v1
+ * @version: 2018v3
  */
 
 import gov.nih.nlm.nls.metamap.MetaMapApi;
@@ -17,6 +17,7 @@ public class MMWrapper {
         this.c = c;
     }
 
+
     void runMeshHeadings(List<SinglePaper> input){
 
         MetaMapApi mmapi = new MetaMapApiImpl();
@@ -31,8 +32,10 @@ public class MMWrapper {
         });
     }
 
-    void runAbstracts(List<SinglePaper> input){
+    void runAbstracts(List<SinglePaper> input, String host, int port) {
         MetaMapApi mmapi = new MetaMapApiImpl();
+        mmapi.setHost(host);
+        mmapi.setPort(port);
        // mmapi.setOptions(c.mm_Abstract_opt);        //TODO figure out which options can be used with which library
 
         input.forEach(tmpPaper -> {

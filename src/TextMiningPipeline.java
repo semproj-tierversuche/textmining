@@ -1,12 +1,12 @@
 /*
- * @version: 2017v1
+ * @version: 2018v3
  */
 
 import java.util.List;
 
 public class TextMiningPipeline implements Runnable{
 
-	private List<SinglePaper> spList;	//TODO decide on proper input type
+    private List<SinglePaper> spList;
 	private Config c;
 
 	TextMiningPipeline(Config c, List<SinglePaper> input){
@@ -26,7 +26,7 @@ public class TextMiningPipeline implements Runnable{
 	@Override
 	public void run() {
 		//init
-		MMWrapper mmw = new MMWrapper(c);
+        MMWrapper mmWr = new MMWrapper(c);
 
 		//transform input into the SinglePaper class
 		//SinglePaper si = new SinglePaper("","","","","");
@@ -36,13 +36,44 @@ public class TextMiningPipeline implements Runnable{
 
 		//delete Stopwords
 
-		//run through metamap TODO Think about Multithreading
+        /*
+         *
+         * running through metamap here
+         *
+         */
+        //getting a open Metamap server
+        MMHost mmh;
+        do {
+            mmh = TMCommandline.openMMhosts.poll();
+            if (mmh == null) {
+                try {
+                    Thread.sleep(c.mm_wait_before_retry);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+        } while (mmh == null);
+
 		//mmw.runMeshHeadings(spList);
-		mmw.runAbstracts(spList);
+        mmWr.runAbstracts(spList, mmh.getHostUrl(), mmh.getPort());
+
+        //returning the open connection
+        TMCommandline.openMMhosts.add(mmh);
+        /*
+         * END of Metamap
+         */
+
 		//run through semrep
 
 		//turn intoBioc
 
 		//return Object
+
+        //TODO move this, as multiple threads overwrite each other
+        spList.forEach(tmpSP -> {
+            BioCConverter.spToBioCStream(tmpSP, System.out);
+            System.out.print("\n" + c.output_divider + "\n");
+        });
 	}
 }

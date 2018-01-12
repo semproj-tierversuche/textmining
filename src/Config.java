@@ -1,3 +1,6 @@
+/*
+ * @version: 2018v3
+ */
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -8,7 +11,21 @@ public class Config {
     //configs
     String txtMining_host;
     int txtMining_port;
-    String metamap_host;
+    int txtMining_batch_size;
+
+    //metamap configs
+    String metamap_host_1;
+    int metamap_ports_start_1;
+    int metamap_ports_end_1;
+    String metamap_host_2;
+    int metamap_ports_start_2;
+    int metamap_ports_end_2;
+    String metamap_host_3;
+    int metamap_ports_start_3;
+    int metamap_ports_end_3;
+
+    int mm_wait_before_retry;
+
     String mm_Abstract_opt;
     String mm_MeshHeading_opt;
     String file_delimiter;
@@ -22,7 +39,7 @@ public class Config {
      * @param dir the directory of the config file
      * @param externalConfig if the config is loaded externally
      */
-     Config(String dir, boolean externalConfig){
+    Config(String dir, boolean externalConfig) {
         Properties prop = new Properties();
         InputStream input = null;
         try {
@@ -39,12 +56,23 @@ public class Config {
             // getting properties
             txtMining_host = prop.getProperty("txtMining_host");
             txtMining_port = Integer.decode(prop.getProperty("txtMining_port"));
-            metamap_host = prop.getProperty("metamap_host");
+            txtMining_batch_size = Integer.decode(prop.getProperty("txtMining_batch_size"));
             mm_Abstract_opt = prop.getProperty("mm_Abstract_opt");
             mm_MeshHeading_opt = prop.getProperty("mm_MeshHeading_opt");
             file_delimiter = prop.getProperty("file_delimiter");
             output_divider = prop.getProperty("output_divider");
             end_of_Stream = prop.getProperty("end_of_Stream");
+            //MM hosting data
+            metamap_host_1 = prop.getProperty("metamap_host_1");
+            metamap_ports_start_1 = Integer.decode(prop.getProperty("metamap_ports_start_1"));
+            metamap_ports_end_1 = Integer.decode(prop.getProperty("metamap_ports_end_1"));
+            metamap_host_1 = prop.getProperty("metamap_host_2");
+            metamap_ports_start_1 = Integer.decode(prop.getProperty("metamap_ports_start_2"));
+            metamap_ports_end_1 = Integer.decode(prop.getProperty("metamap_ports_end_2"));
+            metamap_host_1 = prop.getProperty("metamap_host_3");
+            metamap_ports_start_1 = Integer.decode(prop.getProperty("metamap_ports_start_3"));
+            metamap_ports_end_1 = Integer.decode(prop.getProperty("metamap_ports_end_3"));
+            mm_wait_before_retry = Integer.decode(prop.getProperty("mm_wait_before_retry"));
 
         } catch (IOException ex) {
             ex.printStackTrace();
@@ -58,7 +86,6 @@ public class Config {
             }
         }
     }
-
 
 
 }

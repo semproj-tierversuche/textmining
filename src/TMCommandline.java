@@ -1,5 +1,5 @@
 /*
- * @version: 2017v1
+ * @version: 2018v3
  */
 
 import java.io.ByteArrayInputStream;
@@ -7,13 +7,17 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Queue;
 import java.util.Scanner;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class TMCommandline {
 
     private static String ConfigDir = "/config.properties";
     private static Config c;
-    private static final String version="0.2";
+    private static final String version = "0.3";
+    static Queue<MMHost> openMMhosts = new ConcurrentLinkedQueue<>();    // a list containing open Metamap host connections
+
 
     /**
      * reads from Standard IN runs TM tools and pushes everything to stdOUT
@@ -33,6 +37,7 @@ public class TMCommandline {
             tmp_str = s_in.nextLine();
             if(tmp_str.equals(c.file_delimiter)){
 
+                // adding a new paper to the process stream
                 tmp_is = new ByteArrayInputStream(tmp_strBl.toString().getBytes(StandardCharsets.US_ASCII)); //converting into Stream because saxbuilder does not take strings, must be ASCII for Metamap
                 SinglePaper spaper = BioCConverter.bioCStreamToSP(tmp_is);      //adding current file to the SinglePaper collection
                 if(spaper != null){
@@ -40,18 +45,21 @@ public class TMCommandline {
                     filesProcessed++;
                 }
                 tmp_strBl.setLength(0); //setting back string builder, for new file
+
+                //kicking off a new thread
+                if ((filesProcessed % c.txtMining_batch_size) == 0) {
+                    TextMiningPipeline tmp_thread = new TextMiningPipeline(c, spList);
+                    new Thread(tmp_thread).start();
+                }
             }else{
                 tmp_strBl.append(tmp_str);
             }
         }
 
-        TextMiningPipeline tmPipe = new TextMiningPipeline(c, spList);
-        tmPipe.run();
+        TextMiningPipeline tmp_thread = new TextMiningPipeline(c, spList);
+        tmp_thread.run();
 
-        spList.forEach(tmpSP -> {
-            BioCConverter.spToBioCStream(tmpSP, System.out);
-            System.out.print("\n"+c.output_divider+"\n");
-        } );
+
         System.out.print("\n"+c.end_of_Stream+"\n");
 
         long time_needed = System.currentTimeMillis() - startTime;
@@ -76,6 +84,45 @@ public class TMCommandline {
         System.exit(0);
     }
 
+
+    /**
+     * generates a list of metamap hosts. Config must be loaded beforehand
+     */
+    private static void initMMhosts() {
+        if (c.metamap_host_1 != null && !c.metamap_host_1.isEmpty() && c.metamap_ports_start_1 != 0 && c.metamap_ports_end_1 != 0) {
+            for (int i_port = c.metamap_ports_start_1; i_port <= c.metamap_ports_end_1; i_port++) {
+                MMHost mmh = new MMHost(c.metamap_host_1, i_port);
+                openMMhosts.add(mmh);
+            }
+        }
+
+        if (c.metamap_host_2 != null && !c.metamap_host_2.isEmpty() && c.metamap_ports_start_2 != 0 && c.metamap_ports_end_2 != 0) {
+            for (int i_port = c.metamap_ports_start_2; i_port <= c.metamap_ports_end_2; i_port++) {
+                MMHost mmh = new MMHost(c.metamap_host_2, i_port);
+                openMMhosts.add(mmh);
+            }
+        }
+
+        if (c.metamap_host_3 != null && !c.metamap_host_3.isEmpty() && c.metamap_ports_start_3 != 0 && c.metamap_ports_end_3 != 0) {
+            for (int i_port = c.metamap_ports_start_3; i_port <= c.metamap_ports_end_3; i_port++) {
+                MMHost mmh = new MMHost(c.metamap_host_3, i_port);
+                openMMhosts.add(mmh);
+            }
+        }
+    }
+
+    /**
+     * initialises the program:
+     * 1. loading Configuration
+     * 2. generating list of Metamap Hosts
+     *
+     * @param externalConfig true if the config file is loaded externally
+     */
+    private static void init(boolean externalConfig) {
+        c = new Config(ConfigDir, externalConfig);
+        initMMhosts();
+    }
+
     /**
      * Options when running -tm: -c <CONFIGDIR> (read in a different config file)  -file <FILEDIR> (reads in one BioC XML and processes it)
      *
@@ -98,7 +145,7 @@ public class TMCommandline {
                 externalConfig = true;
             }
 
-            c = new Config(ConfigDir,externalConfig);
+            init(externalConfig);
 
             if(args.length >= (1+i_args) && args[i_args].equals("-file")) {
                 dirToBioCDoc = args[1+i_args];
