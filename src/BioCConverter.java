@@ -17,6 +17,24 @@ import java.util.List;
 
 public class BioCConverter {
 
+    private static final String BIOC_Root = "document";
+    private static final String BIOC_child_passage = "passage";
+    private static final String BIOC_child_source = "source";
+    private static final String BIOC_child_source_ID = "id";
+    private static final String BIOC_infon = "infon";
+    private static final String BIOC_infon_Attr = "key";
+    private static final String BIOC_infon_Attr_Val_type = "type";
+    private static final String BIOC_infon_Val_1 = "title";
+    private static final String BIOC_infon_Val_2 = "abstract";
+    private static final String BIOC_infon_Val_3 = "metadata";
+    private static final String BIOC_infon_Val_4 = "MeshHeading";
+    private static final String BIOC_infon_Val_5 = "Chemical";
+    private static final String BIOC_infon_Val_6 = "Qualifier";   //subset of MeshHeading
+    private static final String BIOC_infon_Val_7 = "Descriptor";  //subset of MeshHeading
+    private static final String BIOC_infon_Val_8 = "NameOfSubstance"; //subset of Chemical
+    private static final String BIOC_infon_Val_9 = "Keyword";
+    private static final String BIOC_TXT_tag = "text";
+    private static final String BIOC_children_sentence = "sentence";
 
     /**
      *
@@ -59,16 +77,27 @@ public class BioCConverter {
 
         SinglePaper sp = new SinglePaper();
 
-        Element paperE = doc.getRootElement().getChild("document");
-        List<Element> children = paperE.getChildren("passage");
-        children.forEach(tmp -> {
-            String keyAttr = tmp.getChild("infon").getAttributeValue("key");
-            if(keyAttr.equals("type")){
-                String infonVal = tmp.getChildText("infon");
-                if(infonVal.equals("title")){
-                    sp.title = tmp.getChildText("text");
-                }else if(infonVal.equals("abstract")){
-                    sp.paperAbstract = tmp.getChildText("text");
+        Element paperE = doc.getRootElement().getChild(BIOC_Root);
+        Element source = doc.getRootElement().getChild(BIOC_child_source);
+
+        Element sourceID = paperE.getChild(BIOC_child_source_ID);
+
+        sp.source = source.getText();
+        sp.id = sourceID.getText();
+
+        List<Element> passages = paperE.getChildren(BIOC_child_passage);
+        passages.forEach(tmp -> {
+            String keyAttr = tmp.getChild(BIOC_infon).getAttributeValue(BIOC_infon_Attr);
+            if (keyAttr.equals(BIOC_infon_Attr_Val_type)) {
+
+                String infonVal = tmp.getChildText(BIOC_infon);
+
+                if (infonVal.equals(BIOC_infon_Val_1)) {
+                    sp.title = tmp.getChildText(BIOC_TXT_tag);
+                } else if (infonVal.equals(BIOC_infon_Val_2)) {
+                    sp.paperAbstract = tmp.getChildText(BIOC_TXT_tag);
+                } else if (infonVal.equals(BIOC_infon_Val_3)) {
+                    sp.addMetaData(tmp);
                 }
             }
         });
@@ -90,6 +119,11 @@ public class BioCConverter {
         Element docEle = new Element("document");
         doc.getRootElement().addContent(docEle);
 
+        //Adding ID to the BioC XML
+        if (sp.id != null) {
+            docEle.addContent(new Element("id").setText(sp.id));
+        }
+
         //Adding Title to the BioC XML
         if(sp.title != null){
             Element passOne_Ele = new Element("passage");
@@ -110,6 +144,11 @@ public class BioCConverter {
             passZwo_Ele.addContent(infon_Abstr_Ele);
             passZwo_Ele.addContent(new Element("text").setText(sp.paperAbstract));
             docEle.addContent(passZwo_Ele);
+        }
+
+        //Adding Metadata to the BioC XML
+        if (sp.metaData != null) {
+            docEle.addContent(sp.metaData);
         }
 
 

@@ -5,6 +5,7 @@
 import gov.nih.nlm.nls.metamap.MetaMapApi;
 import gov.nih.nlm.nls.metamap.MetaMapApiImpl;
 import gov.nih.nlm.nls.metamap.Result;
+import org.apache.commons.text.StringEscapeUtils;
 
 import java.util.List;
 
@@ -37,7 +38,8 @@ public class MMWrapper {
 
         input.forEach(tmpPaper -> {
             if(tmpPaper.paperAbstract != null && !tmpPaper.paperAbstract.isEmpty()){
-                List<Result> resultList = mmapi.processCitationsFromString(tmpPaper.paperAbstract);
+                String tmpAbstract = StringEscapeUtils.unescapeXml(tmpPaper.paperAbstract); //gets rid of the XML escape sequences
+                List<Result> resultList = mmapi.processCitationsFromString(tmpAbstract);
                 Result res = resultList.get(0);
                 tmpPaper.paperAbstract = res.getMachineOutput();
             }
@@ -55,7 +57,8 @@ public class MMWrapper {
         mmapi.setOptions("-b"); //getting all TODO figure out which options exactly we will need
         List<Result> resultList = mmapi.processCitationsFromString(input);
         Result res = resultList.get(0);
-        return res.getMachineOutput();
+
+         return res.getMachineOutput();
     }
 
 }
