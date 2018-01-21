@@ -34,6 +34,7 @@ public class BioCConverter {
     private static final String BIOC_location = "location";
     private static final String BIOC_offset = "offset";
     private static final String BIOC_length = "length";
+    private static final String BIOC_sentence = "sentence";
 
     /**
      *
@@ -94,6 +95,7 @@ public class BioCConverter {
                 if (infonVal.equals(BIOC_title)) {
                     sp.title = tmp.getChildText(BIOC_TXT_tag);
                 } else if (infonVal.equals(BIOC_abstract)) {
+                    sp.setAbstractOffset(tmp.getChildText(BIOC_offset));
                     sp.paperAbstract = tmp.getChildText(BIOC_TXT_tag);
                 } else if (infonVal.equals(BIOC_metadata)) {
                     sp.addMetaData(tmp);
@@ -142,6 +144,34 @@ public class BioCConverter {
     }
 
     /**
+     * Divides a Abstract into utterances --- information from MM
+     *
+     * @param sp         Singlepaper to take the Utterances from
+     * @param parent     parent Element where the Abstract will be added to
+     * @param baseOffset the offset from the Title
+     */
+    private static void generateUtterAbstr(SinglePaper sp, Element parent, int baseOffset) {
+        StringBuilder tmpAbstr = new StringBuilder(sp.paperAbstract);
+        List<Position> positions = sp.getpUtterancesPos();
+
+        positions.forEach(pos -> {
+            int offsetTotalINT = baseOffset + pos.getX();   //pos.getX() ist der Offset im Abstract
+            String offsetTotal = Integer.toString(offsetTotalINT);
+            //setting sentence element and the offset value
+            Element sentence = new Element(BIOC_sentence);
+            sentence.addContent(new Element(BIOC_offset).setText(offsetTotal));
+
+            //adding the text
+            int endUttPos = pos.getX() + pos.getY();
+            String singleUtt = tmpAbstr.substring(pos.getX(), endUttPos);
+            sentence.addContent(new Element(BIOC_TXT_tag).setText(singleUtt));
+
+            //adding everything to the parent
+            parent.addContent(sentence);
+        });
+    }
+
+    /**
      * builds a BioC from a SinglePaper and writes it to a OutputStream in BioC XML format
      *
      * @param sp A SinglePaper
@@ -178,7 +208,14 @@ public class BioCConverter {
             infon_Abstr_Ele.setAttribute(BIOC_key, BIOC_type);
             infon_Abstr_Ele.setText(BIOC_abstract);
             passZwo_Ele.addContent(infon_Abstr_Ele);
-            passZwo_Ele.addContent(new Element(BIOC_TXT_tag).setText(sp.paperAbstract));
+            passZwo_Ele.addContent(new Element(BIOC_offset).setText(sp.getAbstractOffset()));
+
+
+            if (c.mm_abstract_utterance) {
+                generateUtterAbstr(sp, passZwo_Ele, sp.getAbstractOffsetINT());
+            } else {
+                passZwo_Ele.addContent(new Element(BIOC_TXT_tag).setText(sp.paperAbstract));
+            }
 
             if (c.mm_abstract_annotations) {
                 generateAnnoXML(sp, passZwo_Ele);

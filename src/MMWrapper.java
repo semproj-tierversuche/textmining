@@ -56,11 +56,13 @@ public class MMWrapper {
                 try {
                     for (Utterance utterance : res.getUtteranceList()) {
 
-                        for (PCM pcm : utterance.getPCMList()) {
-                            // for (Ev canEv : pcm.getCandidateList()){
-                            //  tmpPaper.addPaperAbstractEv(canEv);
-                            //}
+                        String debugExp;
+                        if (c.mm_abstract_utterance) {
+                            tmpPaper.addUttPos(utterance.getPosition());
+                        }
 
+
+                        for (PCM pcm : utterance.getPCMList()) {
                             for (Mapping map : pcm.getMappingList()) {
                                 for (Ev mapEv : map.getEvList()) {
                                     if (mapEv.getScore() > c.mm_passing_score) {

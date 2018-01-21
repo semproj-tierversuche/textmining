@@ -20,6 +20,7 @@ public class Config {
     boolean mm_title;
     boolean mm_abstract;
     boolean mm_abstract_annotations;
+    boolean mm_abstract_utterance;
 
     /**
      * Gets the configs from the Config file
@@ -56,6 +57,7 @@ public class Config {
             mm_abstract_annotations = Boolean.parseBoolean(prop.getProperty("mm_abstract_annotations"));
             mm_title = Boolean.parseBoolean(prop.getProperty("mm_title"));
             mm_abstract = Boolean.parseBoolean(prop.getProperty("mm_abstract"));
+            mm_abstract_utterance = Boolean.parseBoolean(prop.getProperty("mm_abstract_utterance"));
 
         } catch (IOException ex) {
             ex.printStackTrace();
