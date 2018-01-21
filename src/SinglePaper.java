@@ -3,42 +3,36 @@
  */
 
 
+import gov.nih.nlm.nls.metamap.Ev;
 import org.jdom2.Element;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class SinglePaper {
     String id;              //here pubmed ID
     String source;
     String title;
-    String meshHeadings;
-    String chemicalList;
-
-    String keywords;
-    Element metaData;
 
     String paperAbstract;
+    List<Ev> pAbstractEv;
+
+    Element metaData;
 
     SinglePaper(){
         id = null;
         source = null;
         title = null;
-        meshHeadings = null;
-        chemicalList = null;
         paperAbstract = null;
-        keywords = null;
         metaData = null;
-    }
-
-    SinglePaper(String id, String title, String meshHeadings, String chemicalList, String paperAbstract, String keywords){
-        this.id = id;
-        this.title = title;
-        this.meshHeadings = meshHeadings;
-        this.chemicalList = chemicalList;
-        this.paperAbstract = paperAbstract;
-        this.keywords = keywords;
+        pAbstractEv = new ArrayList<>();
     }
 
     void addMetaData(Element metaData) {
         this.metaData = metaData.clone();
     }
 
+    void addPaperAbstractEv(Ev ev) {
+        pAbstractEv.add(ev);
+    }
 }

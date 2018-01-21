@@ -10,10 +10,16 @@ public class Config {
     int txtMining_port;
     String metamap_host;
     String mm_Abstract_opt;
-    String mm_MeshHeading_opt;
+    String mm_title_opt;
     String file_delimiter;
     String output_divider;
     String end_of_Stream;
+
+    //mm
+    int mm_passing_score;
+    boolean mm_title;
+    boolean mm_abstract;
+    boolean mm_abstract_annotations;
 
     /**
      * Gets the configs from the Config file
@@ -40,11 +46,16 @@ public class Config {
             txtMining_host = prop.getProperty("txtMining_host");
             txtMining_port = Integer.decode(prop.getProperty("txtMining_port"));
             metamap_host = prop.getProperty("metamap_host");
-            mm_Abstract_opt = prop.getProperty("mm_Abstract_opt");
-            mm_MeshHeading_opt = prop.getProperty("mm_MeshHeading_opt");
+            mm_Abstract_opt = prop.getProperty("mm_Abstract_opt", null);
+            mm_title_opt = prop.getProperty("mm_title_opt", null);
             file_delimiter = prop.getProperty("file_delimiter");
             output_divider = prop.getProperty("output_divider");
             end_of_Stream = prop.getProperty("end_of_Stream");
+
+            mm_passing_score = Integer.decode(prop.getProperty("mm_passing_score"));
+            mm_abstract_annotations = Boolean.parseBoolean(prop.getProperty("mm_abstract_annotations"));
+            mm_title = Boolean.parseBoolean(prop.getProperty("mm_title"));
+            mm_abstract = Boolean.parseBoolean(prop.getProperty("mm_abstract"));
 
         } catch (IOException ex) {
             ex.printStackTrace();

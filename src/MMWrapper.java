@@ -2,9 +2,7 @@
  * @version: 2017v1
  */
 
-import gov.nih.nlm.nls.metamap.MetaMapApi;
-import gov.nih.nlm.nls.metamap.MetaMapApiImpl;
-import gov.nih.nlm.nls.metamap.Result;
+import gov.nih.nlm.nls.metamap.*;
 import org.apache.commons.text.StringEscapeUtils;
 
 import java.util.List;
@@ -18,47 +16,66 @@ public class MMWrapper {
         this.c = c;
     }
 
-    void runMeshHeadings(List<SinglePaper> input){
 
+    void runTitle(List<SinglePaper> input) {
         MetaMapApi mmapi = new MetaMapApiImpl();
-        mmapi.setOptions(c.mm_MeshHeading_opt);
 
-        input.forEach( tmpPaper -> {
-            if (tmpPaper.meshHeadings != null && !tmpPaper.meshHeadings.isEmpty()) {
-                List<Result> resultList = mmapi.processCitationsFromString(tmpPaper.meshHeadings);
+        if (c.mm_title_opt != null) {
+            mmapi.setOptions(c.mm_title_opt);
+        }
+        input.forEach(tmpPaper -> {
+            if (tmpPaper.title != null && !tmpPaper.title.isEmpty()) {
+                String tmpTitle = StringEscapeUtils.unescapeXml(tmpPaper.title);
+                List<Result> resultList = mmapi.processCitationsFromString(tmpTitle);
                 Result res = resultList.get(0);
-                tmpPaper.meshHeadings = res.getMachineOutput();
+
+                try {
+                    for (AcronymsAbbrevs aa : res.getAcronymsAbbrevs()) {
+                        aa.getAcronym();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         });
+
     }
 
     void runAbstracts(List<SinglePaper> input){
         MetaMapApi mmapi = new MetaMapApiImpl();
-       // mmapi.setOptions(c.mm_Abstract_opt);        //TODO figure out which options can be used with which library
+        if (c.mm_Abstract_opt != null) {
+            // mmapi.setOptions(c.mm_Abstract_opt);        //TODO figure out which options can be used with which library
+        }
 
         input.forEach(tmpPaper -> {
             if(tmpPaper.paperAbstract != null && !tmpPaper.paperAbstract.isEmpty()){
                 String tmpAbstract = StringEscapeUtils.unescapeXml(tmpPaper.paperAbstract); //gets rid of the XML escape sequences
                 List<Result> resultList = mmapi.processCitationsFromString(tmpAbstract);
                 Result res = resultList.get(0);
-                tmpPaper.paperAbstract = res.getMachineOutput();
+
+                try {
+                    for (Utterance utterance : res.getUtteranceList()) {
+
+                        for (PCM pcm : utterance.getPCMList()) {
+                            // for (Ev canEv : pcm.getCandidateList()){
+                            //  tmpPaper.addPaperAbstractEv(canEv);
+                            //}
+
+                            for (Mapping map : pcm.getMappingList()) {
+                                for (Ev mapEv : map.getEvList()) {
+                                    if (mapEv.getScore() > c.mm_passing_score) {
+                                        tmpPaper.addPaperAbstractEv(mapEv);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
             }
         });
-    }
-
-    /**
-     * first test to see if components work together
-     * @param input text to metamap
-     * @return mined string
-     */
-     String fwdToMMtest(String input){
-
-        MetaMapApi mmapi = new MetaMapApiImpl();
-        mmapi.setOptions("-b"); //getting all TODO figure out which options exactly we will need
-        List<Result> resultList = mmapi.processCitationsFromString(input);
-        Result res = resultList.get(0);
-
-         return res.getMachineOutput();
     }
 
 }

@@ -1,5 +1,5 @@
 /*
- * @version: 2017v1
+ * @version: 2018v2
  */
 
 import java.io.ByteArrayInputStream;
@@ -49,7 +49,7 @@ public class TMCommandline {
         tmPipe.run();
 
         spList.forEach(tmpSP -> {
-            BioCConverter.spToBioCStream(tmpSP, System.out);
+            BioCConverter.spToBioCStream(c, tmpSP, System.out);
             System.out.print("\n"+c.output_divider+"\n");
         } );
         System.out.print("\n"+c.end_of_Stream+"\n");
@@ -70,7 +70,7 @@ public class TMCommandline {
         TextMiningPipeline tmPipe = new TextMiningPipeline(c, spList);
         tmPipe.run();
 
-        spList.forEach(tmp->BioCConverter.spToBioCStream(tmp, System.out));
+        spList.forEach(tmp -> BioCConverter.spToBioCStream(c, tmp, System.out));
 
 
         System.exit(0);
