@@ -51,6 +51,14 @@ public class SinglePaper {
         return pUtterancesPos;
     }
 
+    void addpUtterancePos(Position position) {
+        pUtterancesPos.add(position);
+    }
+
+    boolean utterancePosIsEmpty() {
+        return pUtterancesPos.isEmpty();
+    }
+
     int getAbstractOffsetINT() {
         return Integer.decode(AbstractOffset);
     }

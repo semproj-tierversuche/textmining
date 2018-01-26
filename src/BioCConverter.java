@@ -218,7 +218,7 @@ public class BioCConverter {
             passZwo_Ele.addContent(new Element(BIOC_offset).setText(sp.getAbstractOffset()));
 
 
-            if (c.mm_abstract_utterance) {
+            if (c.mm_abstract_utterance && !sp.utterancePosIsEmpty()) {
                 generateUtterAbstr(sp, passZwo_Ele, sp.getAbstractOffsetINT());
             } else {
                 passZwo_Ele.addContent(new Element(BIOC_TXT_tag).setText(sp.paperAbstract));

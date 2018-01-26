@@ -61,6 +61,7 @@ public class MMWrapper {
                 Result res = resultList.get(0);
                 try {
                     for (Utterance utterance : res.getUtteranceList()) {
+                        tmpPaper.addpUtterancePos(utterance.getPosition());
                         for (PCM pcm : utterance.getPCMList()) {
                             for (Ev candidate : pcm.getCandidateList()) {
                                 if (candidate.getScore() > c.mm_abstract_passing_score) {
