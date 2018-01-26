@@ -14,6 +14,7 @@ public class SinglePaper {
     String id;              //here pubmed ID
     String source;
     String title;
+    List<Ev> pTitleEv;
 
     private String AbstractOffset;
     String paperAbstract;
@@ -31,6 +32,11 @@ public class SinglePaper {
         metaData = null;
         pAbstractEv = new ArrayList<>();
         pUtterancesPos = new ArrayList<>();
+        pTitleEv = new ArrayList<>();
+    }
+
+    void addTitleEv(Ev ev) {
+        pTitleEv.add(ev);
     }
 
     void addMetaData(Element metaData) {

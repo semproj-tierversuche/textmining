@@ -16,7 +16,8 @@ public class Config {
     String end_of_Stream;
 
     //mm
-    int mm_passing_score;
+    int mm_abstract_passing_score;
+    int mm_title_passing_score;
     boolean mm_title;
     boolean mm_abstract;
     boolean mm_abstract_annotations;
@@ -53,7 +54,8 @@ public class Config {
             output_divider = prop.getProperty("output_divider");
             end_of_Stream = prop.getProperty("end_of_Stream");
 
-            mm_passing_score = Integer.decode(prop.getProperty("mm_passing_score"));
+            mm_abstract_passing_score = Integer.decode(prop.getProperty("mm_abstract_passing_score"));
+            mm_title_passing_score = Integer.decode(prop.getProperty("mm_title_passing_score"));
             mm_abstract_annotations = Boolean.parseBoolean(prop.getProperty("mm_abstract_annotations"));
             mm_title = Boolean.parseBoolean(prop.getProperty("mm_title"));
             mm_abstract = Boolean.parseBoolean(prop.getProperty("mm_abstract"));

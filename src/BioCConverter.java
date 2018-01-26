@@ -2,6 +2,7 @@
  * @version: 2018v2
  */
 
+import gov.nih.nlm.nls.metamap.Ev;
 import gov.nih.nlm.nls.metamap.Position;
 import org.jdom2.Attribute;
 import org.jdom2.DocType;
@@ -57,7 +58,8 @@ public class BioCConverter {
      * @return null if failed otherwise a SingePaper
      */
     static SinglePaper bioCStreamToSP(InputStream bioCIN){
-        DocType dT = new DocType("BioC.dtd","BioC.dtd","BioC.dtd");
+
+        DocType dT = new DocType("BioC.dtd", "BioC.dtd");
         try {
             SAXBuilder saxBuilder = new SAXBuilder();
             Document doc = saxBuilder.build(bioCIN).setDocType(dT);
@@ -109,17 +111,17 @@ public class BioCConverter {
     /**
      * Adds annotations to a given parent Element
      *
-     * @param sp     Singlepaper to take the annotations from
+     * @param evList     Ev to get the annotations from
      * @param parent parent Element where the Annotations will be added to
      */
-    private static void generateAnnoXML(SinglePaper sp, Element parent) {
-        sp.pAbstractEv.forEach(ev -> {
+    private static void generateAnnoXML(List<Ev> evList, Element parent) {
+        evList.forEach(ev -> {
             try {
                 Element singleAnno = new Element(BIOC_annotaion);
                 //Annotation INFON:
                 Element AnnoInfon = new Element(BIOC_infon);
                 AnnoInfon.setAttribute(BIOC_key, BIOC_type);
-                AnnoInfon.setText(ev.getPreferredName());
+                AnnoInfon.setText(ev.getConceptName());
                 singleAnno.addContent(AnnoInfon);
 
                 //Annotation location:
@@ -131,7 +133,7 @@ public class BioCConverter {
 
                 //Annotation Concept:
                 Element AnnoConcept = new Element(BIOC_infon);
-                AnnoConcept.setAttribute(BIOC_key, ev.getConceptName());
+                AnnoConcept.setAttribute(BIOC_key, ev.getPreferredName());
                 AnnoConcept.setText(ev.getConceptId());
                 singleAnno.addContent(AnnoConcept);
 
@@ -198,6 +200,11 @@ public class BioCConverter {
             infon_Title_Ele.setText(BIOC_title);
             passOne_Ele.addContent(infon_Title_Ele);
             passOne_Ele.addContent(new Element(BIOC_TXT_tag).setText(sp.title));
+
+            if (c.mm_title) {
+                generateAnnoXML(sp.pTitleEv, passOne_Ele);
+            }
+
             docEle.addContent(passOne_Ele);
         }
 
@@ -218,7 +225,7 @@ public class BioCConverter {
             }
 
             if (c.mm_abstract_annotations) {
-                generateAnnoXML(sp, passZwo_Ele);
+                generateAnnoXML(sp.pAbstractEv, passZwo_Ele);
             }
 
             docEle.addContent(passZwo_Ele);

@@ -38,7 +38,7 @@ public class TextMiningPipeline implements Runnable{
 
 		//run through metamap TODO Think about Multithreading
         if (c.mm_title) {
-            //mmw.runT(spList);
+			mmw.runTitle(spList);
         }
         if (c.mm_abstract) {
             mmw.runAbstracts(spList);
