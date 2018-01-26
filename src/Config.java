@@ -1,3 +1,7 @@
+/*
+ * @version: 2018v2
+ */
+
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -30,7 +34,7 @@ public class Config {
      * @param dir the directory of the config file
      * @param externalConfig if the config is loaded externally
      */
-     Config(String dir, boolean externalConfig){
+    Config(String dir, boolean externalConfig){
         Properties prop = new Properties();
         InputStream input = null;
         try {
@@ -73,7 +77,6 @@ public class Config {
             }
         }
     }
-
 
 
 }

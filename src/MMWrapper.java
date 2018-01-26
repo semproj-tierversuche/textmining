@@ -1,5 +1,5 @@
 /*
- * @version: 2017v1
+ * @version: 2018v2
  */
 
 import gov.nih.nlm.nls.metamap.*;
