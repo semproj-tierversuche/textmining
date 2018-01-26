@@ -31,11 +31,14 @@ public class BioCConverter {
     private static final String BIOC_abstract = "abstract";
     private static final String BIOC_metadata = "metadata";
     private static final String BIOC_TXT_tag = "text";
-    private static final String BIOC_annotaion = "annotation";
+    private static final String BIOC_annotation = "annotation";
     private static final String BIOC_location = "location";
     private static final String BIOC_offset = "offset";
     private static final String BIOC_length = "length";
     private static final String BIOC_sentence = "sentence";
+    private static final String BIOC_score = "score";
+    private static final String BIOC_preferredName = "preferred_name";
+    private static final String BIOC_Concept_ID = "concept_id";
 
     /**
      *
@@ -117,7 +120,14 @@ public class BioCConverter {
     private static void generateAnnoXML(List<Ev> evList, Element parent) {
         evList.forEach(ev -> {
             try {
-                Element singleAnno = new Element(BIOC_annotaion);
+                Element singleAnno = new Element(BIOC_annotation);
+
+                //Annotation INFON Score:
+                Element scoreInfon = new Element(BIOC_infon);
+                scoreInfon.setAttribute(BIOC_key, BIOC_score);
+                scoreInfon.setText(String.valueOf(ev.getScore()));
+                singleAnno.addContent(scoreInfon);
+
                 //Annotation INFON:
                 Element AnnoInfon = new Element(BIOC_infon);
                 AnnoInfon.setAttribute(BIOC_key, BIOC_type);
@@ -127,15 +137,21 @@ public class BioCConverter {
                 //Annotation location:
                 Element AnnoLocation = new Element(BIOC_location);
                 Position evPos = ev.getPositionalInfo().get(0);
-                AnnoLocation.setAttribute(BIOC_offset, "'" + evPos.getX() + "'");
-                AnnoLocation.setAttribute(BIOC_length, "'" + evPos.getY() + "'");
+                AnnoLocation.setAttribute(BIOC_offset, String.valueOf(evPos.getX()));
+                AnnoLocation.setAttribute(BIOC_length, String.valueOf(evPos.getY()));
                 singleAnno.addContent(AnnoLocation);
 
                 //Annotation Concept:
-                Element AnnoConcept = new Element(BIOC_infon);
-                AnnoConcept.setAttribute(BIOC_key, ev.getPreferredName());
-                AnnoConcept.setText(ev.getConceptId());
-                singleAnno.addContent(AnnoConcept);
+                Element AnnoConceptName = new Element(BIOC_infon);
+                AnnoConceptName.setAttribute(BIOC_key, BIOC_preferredName);
+                AnnoConceptName.setText(ev.getPreferredName());
+                singleAnno.addContent(AnnoConceptName);
+
+                //Annotation Concept ID:
+                Element AnnoConceptID = new Element(BIOC_infon);
+                AnnoConceptID.setAttribute(BIOC_key, BIOC_Concept_ID);
+                AnnoConceptID.setText(ev.getConceptId());
+                singleAnno.addContent(AnnoConceptID);
 
                 //adding Annotation to parent
                 parent.addContent(singleAnno);

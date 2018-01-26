@@ -24,13 +24,8 @@ public class TextMiningPipeline implements Runnable{
 		//init
 		MMWrapper mmw = new MMWrapper(c);
 
-		//transform input into the SinglePaper class
-		//SinglePaper si = new SinglePaper("","","","","");
-
-
 		//Call Zoning method here
 
-		//delete Stopwords
 
 		//run through metamap TODO Think about Multithreading
         if (c.mm_title) {
@@ -40,9 +35,14 @@ public class TextMiningPipeline implements Runnable{
             mmw.runAbstracts(spList);
         }
 
-		//run through semrep
+		//Candidate filtering
+		for (SinglePaper sp : spList) {
+			sp.cleanEvLists();
+		}
 
-		//turn intoBioc
+		//TODO: mark the utterance with the most importance
+
+		//TODO: move turn intoBioC here
 
 		//return Object
 	}
