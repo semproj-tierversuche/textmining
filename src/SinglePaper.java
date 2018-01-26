@@ -47,10 +47,6 @@ public class SinglePaper {
         pAbstractEv.add(ev);
     }
 
-    void addUttPos(Position aPos) {
-        pUtterancesPos.add(aPos);
-    }
-
     List<Position> getpUtterancesPos() {
         return pUtterancesPos;
     }

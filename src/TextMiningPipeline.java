@@ -14,10 +14,6 @@ public class TextMiningPipeline implements Runnable{
 		this.spList = input;
 	}
 
-	List<SinglePaper> getSpList(){
-		return spList;
-	}
-
 	/**
 	 * The main method where the input runs through
 	 *
