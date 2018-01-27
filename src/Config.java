@@ -26,6 +26,7 @@ public class Config {
     boolean mm_abstract;
     boolean mm_abstract_annotations;
     boolean mm_abstract_utterance;
+    boolean bioC_Xml_only;
 
     /**
      * Gets the configs from the Config file
@@ -64,6 +65,7 @@ public class Config {
             mm_title = Boolean.parseBoolean(prop.getProperty("mm_title"));
             mm_abstract = Boolean.parseBoolean(prop.getProperty("mm_abstract"));
             mm_abstract_utterance = Boolean.parseBoolean(prop.getProperty("mm_abstract_utterance"));
+            bioC_Xml_only = Boolean.parseBoolean(prop.getProperty("bioC_Xml_only"));
 
         } catch (IOException ex) {
             ex.printStackTrace();

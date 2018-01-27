@@ -50,12 +50,17 @@ public class TMCommandline {
 
         spList.forEach(tmpSP -> {
             BioCConverter.spToBioCStream(c, tmpSP, System.out);
-            System.out.print("\n"+c.output_divider+"\n");
+            if(c.bioC_Xml_only){
+                System.out.print("\n"+c.output_divider+"\n");
+            }
         } );
-        System.out.print("\n"+c.end_of_Stream+"\n");
 
-        long time_needed = System.currentTimeMillis() - startTime;
-        System.out.println("Time needed in ms: "+ time_needed+" --- files processed: "+filesProcessed);
+        if(c.bioC_Xml_only){
+            System.out.print("\n"+c.end_of_Stream+"\n");
+            long time_needed = System.currentTimeMillis() - startTime;
+            System.out.println("Time needed in ms: "+ time_needed+" --- files processed: "+filesProcessed);
+        }
+
         System.exit(0);
     }
 
