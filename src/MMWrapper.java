@@ -48,35 +48,41 @@ public class MMWrapper {
 
     }
 
-    void runAbstracts(List<SinglePaper> input){
+    void runAbstracts(List<SinglePaper> input) {
         MetaMapApi mmapi = new MetaMapApiImpl();
+        mmapi.setTimeout(c.mm_timeOut);
         if (c.mm_Abstract_opt != null) {
             mmapi.setOptions(c.mm_Abstract_opt);
         }
 
+        StringBuilder stBuilder = new StringBuilder();
         input.forEach(tmpPaper -> {
-            if(tmpPaper.paperAbstract != null && !tmpPaper.paperAbstract.isEmpty()){
-                String tmpAbstract = StringEscapeUtils.unescapeXml(tmpPaper.paperAbstract); //gets rid of the XML escape sequences
-                List<Result> resultList = mmapi.processCitationsFromString(tmpAbstract);
-                Result res = resultList.get(0);
-                try {
-                    for (Utterance utterance : res.getUtteranceList()) {
-                        tmpPaper.addpUtterancePos(utterance.getPosition());
-                        for (PCM pcm : utterance.getPCMList()) {
-                            for (Ev candidate : pcm.getCandidateList()) {
-                                if (candidate.getScore() > c.mm_abstract_passing_score) {
-                                    tmpPaper.addPaperAbstractEv(candidate);
-                                }
+            if (tmpPaper.paperAbstract != null && !tmpPaper.paperAbstract.isEmpty()) {
+                stBuilder.append(StringEscapeUtils.unescapeXml(tmpPaper.paperAbstract));
+                stBuilder.append("\n\n");
+            }
+        });
 
+        List<Result> resultList = mmapi.processCitationsFromString(stBuilder.toString());
+
+        for(int i=0;i < resultList.size(); i++){
+            Result res = resultList.get(i);
+            try {
+                for (Utterance utterance : res.getUtteranceList()) {
+                    input.get(i).addpUtterancePos(utterance.getPosition());
+                    for (PCM pcm : utterance.getPCMList()) {
+                        for (Ev candidate : pcm.getCandidateList()) {
+                            if (candidate.getScore() > c.mm_abstract_passing_score) {
+                                input.get(i).addPaperAbstractEv(candidate);
                             }
                         }
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
                 }
-
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        });
+        }
+
     }
 
 }
