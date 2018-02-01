@@ -12,6 +12,7 @@ public class Config {
     //configs
     String txtMining_host;
     int txtMining_port;
+    int mm_timeOut;
     String metamap_host;
     String mm_Abstract_opt;
     String mm_title_opt;
@@ -52,12 +53,16 @@ public class Config {
             // getting properties
             txtMining_host = prop.getProperty("txtMining_host");
             txtMining_port = Integer.decode(prop.getProperty("txtMining_port"));
+            mm_timeOut = Integer.decode(prop.getProperty("mm_timeOut"));
             metamap_host = prop.getProperty("metamap_host");
             mm_Abstract_opt = prop.getProperty("mm_Abstract_opt", null);
             mm_title_opt = prop.getProperty("mm_title_opt", null);
-            file_delimiter = prop.getProperty("file_delimiter");
-            output_divider = prop.getProperty("output_divider");
-            end_of_Stream = prop.getProperty("end_of_Stream");
+            int i= Integer.parseInt(prop.getProperty("file_delimiter"), 16);
+            file_delimiter = ""+i;
+            i = Integer.parseInt(prop.getProperty("output_divider"), 16);
+            output_divider = ""+i;
+            i=Integer.parseInt(prop.getProperty("end_of_Stream"),16);
+            end_of_Stream = ""+i;
 
             mm_abstract_passing_score = Integer.decode(prop.getProperty("mm_abstract_passing_score"));
             mm_title_passing_score = Integer.decode(prop.getProperty("mm_title_passing_score"));

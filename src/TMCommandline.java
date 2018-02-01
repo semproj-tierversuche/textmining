@@ -31,7 +31,7 @@ public class TMCommandline {
         while(!s_in.hasNext(c.end_of_Stream)) {
 
             tmp_str = s_in.nextLine();
-            if(tmp_str.equals(c.file_delimiter)){
+            if(tmp_str.endsWith(c.end_of_Stream)){
 
                 tmp_is = new ByteArrayInputStream(tmp_strBl.toString().getBytes(StandardCharsets.US_ASCII)); //converting into Stream because saxbuilder does not take strings, must be ASCII for Metamap
                 SinglePaper spaper = BioCConverter.bioCStreamToSP(tmp_is);      //adding current file to the SinglePaper collection
@@ -50,15 +50,15 @@ public class TMCommandline {
 
         spList.forEach(tmpSP -> {
             BioCConverter.spToBioCStream(c, tmpSP, System.out);
-            if(c.bioC_Xml_only){
+            if( ! c.bioC_Xml_only){
                 System.out.print("\n"+c.output_divider+"\n");
             }
         } );
 
-        if(c.bioC_Xml_only){
+        if( ! c.bioC_Xml_only){
             System.out.print("\n"+c.end_of_Stream+"\n");
             long time_needed = System.currentTimeMillis() - startTime;
-            System.out.println("Time needed in ms: "+ time_needed+" --- files processed: "+filesProcessed);
+            //System.out.println("Time needed in ms: "+ time_needed+" --- files processed: "+filesProcessed);
         }
 
         System.exit(0);
