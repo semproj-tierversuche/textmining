@@ -57,12 +57,15 @@ public class Config {
             metamap_host = prop.getProperty("metamap_host");
             mm_Abstract_opt = prop.getProperty("mm_Abstract_opt", null);
             mm_title_opt = prop.getProperty("mm_title_opt", null);
-            int i= Integer.parseInt(prop.getProperty("file_delimiter"), 16);
-            file_delimiter = ""+i;
+            int i = Integer.parseInt(prop.getProperty("file_delimiter"), 16);
+            char c = (char) i;
+            file_delimiter = "" + c;
             i = Integer.parseInt(prop.getProperty("output_divider"), 16);
-            output_divider = ""+i;
+            c = (char) i;
+            output_divider = "" + c;
             i=Integer.parseInt(prop.getProperty("end_of_Stream"),16);
-            end_of_Stream = ""+i;
+            c = (char) i;
+            end_of_Stream = "" + c;
 
             mm_abstract_passing_score = Integer.decode(prop.getProperty("mm_abstract_passing_score"));
             mm_title_passing_score = Integer.decode(prop.getProperty("mm_title_passing_score"));

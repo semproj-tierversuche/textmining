@@ -115,10 +115,10 @@ public class TMCommandline {
         }
 
         if(args.length > 1) {
-            System.err.println("-version to get the Version number and -tm < -c \"CONFIGDIR\"> < -file\"File Dir STRING\">");
+            //System.err.println("-version to get the Version number and -tm < -c \"CONFIGDIR\"> < -file\"File Dir STRING\">");
             System.exit(1);
         }
 
-        System.err.println("Metamap command line wrapper missing, piping stdin to stdout:");
+        //System.err.println("Metamap command line wrapper missing, piping stdin to stdout:");
     }
 }
