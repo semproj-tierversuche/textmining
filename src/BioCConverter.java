@@ -1,6 +1,7 @@
 /*
- * @version: 2018v2
+ * @version: 2018v4
  */
+
 
 import gov.nih.nlm.nls.metamap.Ev;
 import gov.nih.nlm.nls.metamap.Position;
@@ -16,7 +17,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.List;
 
-
+/**
+ * @author pLukas
+ */
 public class BioCConverter {
 
     private static final String BIOC_Root = "collection";
@@ -39,6 +42,7 @@ public class BioCConverter {
     private static final String BIOC_score = "score";
     private static final String BIOC_preferredName = "preferred_name";
     private static final String BIOC_Concept_ID = "concept_id";
+    private static final String BIOC_purpose = "purpose";
 
     /**
      *
@@ -168,9 +172,12 @@ public class BioCConverter {
      * @param parent     parent Element where the Abstract will be added to
      * @param baseOffset the offset from the Title
      */
-    private static void generateUtterAbstr(SinglePaper sp, Element parent, int baseOffset) {
+    private static void generateUtterAbstr(SinglePaper sp, Element parent, int baseOffset, VersuchszweckChecker vzc) {
         StringBuilder tmpAbstr = new StringBuilder(sp.paperAbstract);
         List<Position> positions = sp.getpUtterancesPos();
+
+        final boolean[] gotUsage = new boolean[1];  //boolean is used in lambda, so it must be final
+        gotUsage[0] = false;    // the array provides an effectively final
 
         positions.forEach(pos -> {
             int offsetTotalINT = baseOffset + pos.getX();   //pos.getX() ist der Offset im Abstract
@@ -182,6 +189,12 @@ public class BioCConverter {
             //adding the text
             int endUttPos = pos.getX() + pos.getY();
             String singleUtt = tmpAbstr.substring(pos.getX(), endUttPos);
+
+            //checking if the text describes the experimental purpose
+            if( !gotUsage[0] && vzc.isVersuchszweck(singleUtt)){
+                sentence.addContent(new Element(BIOC_purpose).setText("true"));
+                gotUsage[0] = true;
+            }
             sentence.addContent(new Element(BIOC_TXT_tag).setText(singleUtt));
 
             //adding everything to the parent
@@ -195,7 +208,7 @@ public class BioCConverter {
      * @param sp A SinglePaper
      * @param out OutputStream where the content of the SinglePaper will be written into
      */
-    static void spToBioCStream(Config c, SinglePaper sp, OutputStream out) {
+    static void spToBioCStream(Config c, SinglePaper sp, OutputStream out, VersuchszweckChecker vzc) {
 
         Element rootEle = new Element(BIOC_Root);
         Document doc = new Document(rootEle);
@@ -235,7 +248,7 @@ public class BioCConverter {
 
 
             if (c.mm_abstract_utterance && !sp.utterancePosIsEmpty()) {
-                generateUtterAbstr(sp, passZwo_Ele, sp.getAbstractOffsetINT());
+                generateUtterAbstr(sp, passZwo_Ele, sp.getAbstractOffsetINT(), vzc);
             } else {
                 passZwo_Ele.addContent(new Element(BIOC_TXT_tag).setText(sp.paperAbstract));
             }
@@ -262,7 +275,7 @@ public class BioCConverter {
         try {
             xmlOutput.output(doc, out);
         }catch (Exception e){
-            e.printStackTrace();
+            e.printStackTrace(c.errorStream);
         }
 
     }

@@ -1,5 +1,5 @@
 /*
- * @version: 2018v2
+ * @version: 2018v4
  */
 
 import gov.nih.nlm.nls.metamap.*;
@@ -7,6 +7,9 @@ import org.apache.commons.text.StringEscapeUtils;
 
 import java.util.List;
 
+/**
+ * @author pLukas
+ */
 public class MMWrapper {
 
     //Metamap Config:
@@ -40,7 +43,7 @@ public class MMWrapper {
                         }
                     }
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    e.printStackTrace(c.errorStream);
                 }
 
             }
@@ -79,7 +82,7 @@ public class MMWrapper {
                     }
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                e.printStackTrace(c.errorStream);
             }
         }
 

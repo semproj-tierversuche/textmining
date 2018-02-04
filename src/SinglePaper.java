@@ -1,8 +1,6 @@
 /*
- * @version: 2018v2
+ * @version: 2018v4
  */
-
-
 import gov.nih.nlm.nls.metamap.Ev;
 import gov.nih.nlm.nls.metamap.Position;
 import org.jdom2.Element;
@@ -10,6 +8,9 @@ import org.jdom2.Element;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author pLukas
+ */
 public class SinglePaper {
     String id;              //here pubmed ID
     String source;
@@ -75,7 +76,6 @@ public class SinglePaper {
      * helper method for cleanEvLists
      *
      * @param evList List<Ev> to clean up
-     * @return evList with no position covered twice unless the score is equal
      */
     private void clearList(List<Ev> evList) {
 
@@ -92,7 +92,6 @@ public class SinglePaper {
                     } else if (evOne.getScore() < evTwo.getScore()) {
                         evList.remove(evOne);
                     } else {     // score is equal -- lookahead ,- check if the next element matches the current two
-                        //TODO check if last element
                         if (1 + i_lTwo < evList.size()) {
                             Ev thirdElement = evList.get(1 + i_lTwo);
                             Position posThree = thirdElement.getPositionalInfo().get(0);

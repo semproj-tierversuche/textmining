@@ -1,7 +1,12 @@
-import java.io.*;
-import java.nio.file.Files;
-import java.util.*;
-import java.util.regex.*;
+/*
+ * @version: 2018v4
+ */
+
+import java.io.InputStream;
+import java.util.HashSet;
+import java.util.Scanner;
+import java.util.Set;
+import java.util.regex.Pattern;
 
 
 /**
@@ -10,24 +15,23 @@ import java.util.regex.*;
  */
 public class VersuchszweckChecker {
 	//selbst Pattern#compile() aufzurufen erspart, dass wiederholt implizit von String#matches() machen zu lassen
-	private final Set<Pattern> dictionary;
-	private final Set<Pattern> stopWords;
+	private Set<Pattern> dictionary;
+	private Set<Pattern> stopWords;
 	
 	/**
-	 * Versuchszweck eines pubmed-Artikels erkennen durch Auswahl des daf�r wichtigsten Satzes
+	 * Versuchszweck eines pubmed-Artikels erkennen durch Auswahl des dafuer wichtigsten Satzes
 	 * 
-	 * Man zerlege einen pubmed-Abstract in einzelne S�tze jeweils vom Typ String.
-	 * F�r jeden Satz, in ihrer Reihenfolge im pubmed-Abstract, rufe man diese Methode auf.
-	 * Der erste Satz, f�r den diese Methode true zur�ckgibt, beschreibt vermutlich den Versuchszweck am besten.
-	 * F�r die nachfolgenden S�tze des gleichen Abstracts muss diese Methode dann nicht mehr aufgerufen werden.
+	 * Man zerlege einen pubmed-Abstract in einzelne Saetze jeweils vom Typ String.
+	 * Fuer jeden Satz, in ihrer Reihenfolge im pubmed-Abstract, rufe man diese Methode auf.
+	 * Der erste Satz, fuer den diese Methode true zurueckgibt, beschreibt vermutlich den Versuchszweck am besten.
+	 * Fuer die nachfolgenden Saetze des gleichen Abstracts muss diese Methode dann nicht mehr aufgerufen werden.
 	 * 
-	 * Die Versuchszweck-S�tze mehrere Dokumente k�nnen dann im eigenen Code per beliebigen Verfahren paarweise auf �hnlichkeit verglichen werden.
+	 * Die Versuchszweck-Saetze mehrere Dokumente k�nnen dann im eigenen Code per beliebigen Verfahren paarweise auf Aehnlichkeit verglichen werden.
 	 * 
 	 * Diese Methode ist thread-safe.
 	 *  
 	 * @param sentence Satz aus einem pubmed-Abstract
-	 * @see getFirstVersuchszweck(String[])
-	 * @return true falls der �bergebene Satz vermutlich einen Versuchszweck beschreibt
+	 * @return true falls der Uebergebene Satz vermutlich einen Versuchszweck beschreibt
 	 */
 	boolean isVersuchszweck(final String sentence)  {
 		assert(dictionary.size() > 0);
@@ -45,11 +49,11 @@ public class VersuchszweckChecker {
 	}
 	
 	/**
-	 * Ruft #isVersuchszweck(String) in einer Schleife f�r jedes Element des �bergebenen Arrays auf und liefert das erste s mit isVersuchszweck(s)=true
+	 * Ruft #isVersuchszweck(String) in einer Schleife fuer jedes Element des Uebergebenen Arrays auf und liefert das erste s mit isVersuchszweck(s)=true
 	 * 
 	 * Diese Methode ist thread-safe.
 	 * 
-	 * @param sentences gesamter pubmed-Abstract bereits in einzelne S�tze zerlegt
+	 * @param sentences gesamter pubmed-Abstract bereits in einzelne Saetze zerlegt
 	 * @return gefundenen Versuchszweck oder null, wenn Versuchszweck nicht erkannt
 	 */
 	String getFirstVersuchszweck(final String[] sentences)  {
@@ -62,38 +66,32 @@ public class VersuchszweckChecker {
 	}
 	
 	/**
-	 * Initialisiere das Dictionary.
-	 * 
-	 * Als �bergabeparameter eignet sich evtl. auch File f = new File(ClassLoader.getResource("dictionary.txt"))
-	 * 
-	 * @param dictionaryFile Pfad zum dictionary mit Here-We-Phrasen
-	 * @param stopwordFile Pfad zur Liste mit Stopworten, null wenn kein Stopw�rter genutzt werden sollen
-	 * @throws FileNotFoundException stopwordFile nicht gefunden
-	 * @throws IOException dictionaryFile nicht lesbar
-	 */
-	 VersuchszweckChecker(final File dictionaryFile, final File stopwordFile) throws FileNotFoundException, IOException {
-		Set<Pattern> dictionary = new HashSet<Pattern>();
-		Set<Pattern> stopWords = new HashSet<Pattern>();
-		
+	* Initialisiere das Dictionary.
+	*
+	* Als Uebergabeparameter eignet sich evtl. auch File f = new File(ClassLoader.getResource("dictionary.txt"))
+	*
+	* @param dictionaryFile Pfad zum dictionary mit Here-We-Phrasen
+	* @param stopwordFile Pfad zur Liste mit Stopworten, null wenn kein Stopwoerter genutzt werden sollen
+	*/
+	VersuchszweckChecker(String dictionaryFile, String stopwordFile){
+
+		dictionary = new HashSet<>();
+		stopWords = new HashSet<>();
+
 		if(stopwordFile != null) {
-			//kann Scanner benutzen, weil alle Zeilen frei von Leerzeichen
-			try (Scanner scanner = new Scanner(stopwordFile)) {
-				while(scanner.hasNext()) {
-					Pattern p = Pattern.compile(".*" + scanner.next(), Pattern.CASE_INSENSITIVE);
-					stopWords.add(p);
-				}
+			InputStream stopF = this.getClass().getResourceAsStream(stopwordFile);
+			Scanner s_stop = new Scanner(stopF);
+			while(s_stop.hasNextLine()) {
+				Pattern p = Pattern.compile(".*" + s_stop.nextLine(), Pattern.CASE_INSENSITIVE);
+				stopWords.add(p);
 			}
 		}
-		this.stopWords = Collections.unmodifiableSet(stopWords);
-		
-		//kann Scanner nicht nutzen, weil Zeilen auch mal nen Leerzeichen enthalten
-		for(String dictionaryEntry : Files.readAllLines(dictionaryFile.toPath())) {
-			Pattern p = Pattern.compile(".*" + dictionaryEntry, Pattern.CASE_INSENSITIVE);
+
+		InputStream dicF = this.getClass().getResourceAsStream(dictionaryFile);
+		Scanner s_dic = new Scanner(dicF);
+		while (s_dic.hasNextLine()){
+			Pattern p = Pattern.compile(".*"+ s_dic.nextLine(), Pattern.CASE_INSENSITIVE);
 			dictionary.add(p);
 		}
-		
-		this.dictionary = Collections.unmodifiableSet(dictionary);
-		
-		
 	}
 }

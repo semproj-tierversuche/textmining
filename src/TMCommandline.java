@@ -1,6 +1,7 @@
 /*
- * @version: 2018v2
+ * @version: 2018v4
  */
+
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -9,11 +10,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+/**
+ * @author pLukas
+ */
 public class TMCommandline {
 
     private static String ConfigDir = "/config.properties";
     private static Config c;
-    private static final String version="0.2";
+    private static final String version="0.4";
 
     /**
      * reads from Standard IN runs TM tools and pushes everything to stdOUT
@@ -45,15 +49,8 @@ public class TMCommandline {
             }
         }
 
-        TextMiningPipeline tmPipe = new TextMiningPipeline(c, spList);
+        TextMiningPipeline tmPipe = new TextMiningPipeline(c, spList, System.out);
         tmPipe.run();
-
-        spList.forEach(tmpSP -> {
-            BioCConverter.spToBioCStream(c, tmpSP, System.out);
-            if( ! c.bioC_Xml_only){
-                System.out.print("\n"+c.output_divider+"\n");
-            }
-        } );
 
         if( ! c.bioC_Xml_only){
             System.out.print("\n"+c.end_of_Stream+"\n");
@@ -72,11 +69,11 @@ public class TMCommandline {
         List<SinglePaper> spList = new ArrayList<>();
         SinglePaper sp = BioCConverter.bioCFileToSP(dirToBioC);
         spList.add(sp);
-        TextMiningPipeline tmPipe = new TextMiningPipeline(c, spList);
+        TextMiningPipeline tmPipe = new TextMiningPipeline(c, spList, System.out);
         tmPipe.run();
 
-        spList.forEach(tmp -> BioCConverter.spToBioCStream(c, tmp, System.out));
-
+        VersuchszweckChecker vzc = new VersuchszweckChecker(c.vzc_dic_dir, c.vzc_stop_dir);
+        spList.forEach(tmp -> BioCConverter.spToBioCStream(c, tmp, System.out, vzc));
 
         System.exit(0);
     }

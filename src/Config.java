@@ -1,9 +1,11 @@
 /*
- * @version: 2018v2
+ * @version: 2018v4
  */
+
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.io.InputStream;
 import java.util.Properties;
 
@@ -19,6 +21,10 @@ public class Config {
     String file_delimiter;
     String output_divider;
     String end_of_Stream;
+    PrintWriter errorStream;
+
+    String vzc_dic_dir;
+    String vzc_stop_dir;
 
     //mm
     int mm_abstract_passing_score;
@@ -49,6 +55,13 @@ public class Config {
 
             // load a properties file
             prop.load(input);
+
+            String errorStreamDir = prop.getProperty("err_Log_dir","err_txtMining.log");
+
+            errorStream = new PrintWriter(errorStreamDir);
+
+            vzc_dic_dir = "/assets/dictionary.txt";
+            vzc_stop_dir = "/assets/stopwords.txt";
 
             // getting properties
             txtMining_host = prop.getProperty("txtMining_host");
