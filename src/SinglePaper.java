@@ -9,11 +9,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * internal representation
  * @author pLukas
  */
 public class SinglePaper {
     String id;              //here pubmed ID
-    String source;
     String title;
     List<Ev> pTitleEv;
 
@@ -26,7 +26,6 @@ public class SinglePaper {
 
     SinglePaper(){
         id = null;
-        source = null;
         title = null;
         AbstractOffset = null;
         paperAbstract = null;
@@ -77,7 +76,7 @@ public class SinglePaper {
      *
      * @param evList List<Ev> to clean up
      */
-    private void clearList(List<Ev> evList) {
+    private void cleanList(List<Ev> evList) {
 
         for (int i_lOne = 0, i_lTwo = 1; i_lTwo < evList.size(); ) {
             Ev evOne = evList.get(i_lOne);
@@ -128,10 +127,10 @@ public class SinglePaper {
      */
     void cleanEvLists() {
         if (pTitleEv != null) {
-            clearList(pTitleEv);
+            cleanList(pTitleEv);
         }
         if (pAbstractEv != null) {
-            clearList(pAbstractEv);
+            cleanList(pAbstractEv);
         }
     }
 }

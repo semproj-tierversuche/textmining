@@ -2,7 +2,6 @@
  * @version: 2018v4
  */
 
-import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
 
@@ -23,8 +22,6 @@ public class TextMiningPipeline implements Runnable{
 
 	/**
 	 * The main method where the input runs through
-	 *
-	 *
 	 */
 	@Override
 	public void run() {
@@ -50,17 +47,7 @@ public class TextMiningPipeline implements Runnable{
 
 		//turning intoBioC here:
 		//WARNING: Versuchszeckchecker is called in BioCConverter due to efficiency
-		String outdivider = "\n"+c.output_divider+"\n";
 		VersuchszweckChecker vzc = new VersuchszweckChecker(c.vzc_dic_dir, c.vzc_stop_dir);
-		spList.forEach(tmpSP -> {
-			BioCConverter.spToBioCStream(c, tmpSP, outStream, vzc);
-			if( ! c.bioC_Xml_only ){
-				try{
-					outStream.write(outdivider.getBytes());
-				}catch (IOException ioE){
-					ioE.printStackTrace(c.errorStream);
-				}
-			}
-		} );
+        BioCConverter.spToBioCStream(c, spList, outStream, vzc);
 	}
 }

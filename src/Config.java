@@ -15,8 +15,6 @@ public class Config {
     final String metamap_host;
     final String mm_Abstract_opt;
     final String mm_title_opt;
-    final String file_delimiter;
-    final String output_divider;
     final String end_of_Stream;
     final PrintWriter errorStream;
 
@@ -84,15 +82,7 @@ public class Config {
          metamap_host = prop.getProperty("metamap_host");
          mm_Abstract_opt = prop.getProperty("mm_Abstract_opt", null);
          mm_title_opt = prop.getProperty("mm_title_opt", null);
-         int i = Integer.parseInt(prop.getProperty("file_delimiter"), 16);
-         char c = (char) i;
-         file_delimiter = "" + c;
-         i = Integer.parseInt(prop.getProperty("output_divider"), 16);
-         c = (char) i;
-         output_divider = "" + c;
-         i=Integer.parseInt(prop.getProperty("end_of_Stream"),16);
-         c = (char) i;
-         end_of_Stream = "" + c;
+         end_of_Stream = prop.getProperty("end_of_Stream");
 
          mm_abstract_passing_score = Integer.decode(prop.getProperty("mm_abstract_passing_score"));
          mm_title_passing_score = Integer.decode(prop.getProperty("mm_title_passing_score"));
