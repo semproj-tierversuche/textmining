@@ -1,33 +1,53 @@
-/**
- *  Todo: Sobald Metamap per Kommandozeile aufrufbar, den Input da reinschieben und den Output per XSLT nach BioC konvertieren.
+/*
+ * @version: 2018v4
  */
-//package textmining.src;
 
-import java.io.*;
-import java.util.Scanner;
+import java.io.OutputStream;
+import java.util.List;
 
+/**
+ * @author pLukas
+ */
+public class TextMiningPipeline implements Runnable{
 
-//prozeduraler Stub
-//Umsetzen in objektorientierten Code sobald XSLT und Metamap-Commandline vorliegen
-public class TextMiningPipeline {
-	private static Scanner input = new Scanner(System.in);
+	private final List<SinglePaper> spList;
+	private final Config c;
+	private final OutputStream outStream;
 
-	private static void showUsage() {
-		System.err.println("-version	.. print version number to stdout");
-		System.exit(1);
+	TextMiningPipeline(Config c, List<SinglePaper> input, OutputStream out){
+		this.c = c;
+		this.spList = input;
+		this.outStream = out;
 	}
-	
-	public static void main(String[] args) {
-		if(args.length > 1) {
-			showUsage();
+
+	/**
+	 * The main method where the input runs through
+	 */
+	@Override
+	public void run() {
+		//init
+		MMWrapper mmw = new MMWrapper(c);
+
+		//Call Zoning method here
+
+
+		//run through metamap
+        if (c.mm_title) {
+			mmw.runTitle(spList);
+        }
+        if (c.mm_abstract) {
+            mmw.runAbstracts(spList);
+        }
+
+		//Candidate filtering
+		for (SinglePaper sp : spList) {
+			sp.cleanEvLists();
 		}
-		if(args.length == 1 && args[0].equals("-version")) {
-			System.out.println("0.1");
-			System.exit(0);
-		}
-		System.err.println("Metamap command line wrapper missing, piping stdin to stdout:");
-		while(input.hasNextLine()) {
-			System.out.println(input.nextLine());
-		}
+
+
+		//turning intoBioC here:
+		//WARNING: Versuchszeckchecker is called in BioCConverter due to efficiency
+		VersuchszweckChecker vzc = new VersuchszweckChecker(c.vzc_dic_dir, c.vzc_stop_dir);
+        BioCConverter.spToBioCStream(c, spList, outStream, vzc);
 	}
 }
