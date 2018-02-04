@@ -11,9 +11,9 @@ import java.util.List;
  */
 public class TextMiningPipeline implements Runnable{
 
-	private List<SinglePaper> spList;
-	private Config c;
-	private OutputStream outStream;
+	private final List<SinglePaper> spList;
+	private final Config c;
+	private final OutputStream outStream;
 
 	TextMiningPipeline(Config c, List<SinglePaper> input, OutputStream out){
 		this.c = c;

@@ -13,7 +13,7 @@ import java.util.List;
 public class MMWrapper {
 
     //Metamap Config:
-    private Config c;
+    private final Config c;
 
     MMWrapper(Config c){
         this.c = c;

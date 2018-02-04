@@ -3,6 +3,7 @@
  */
 
 import java.io.InputStream;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Scanner;
 import java.util.Set;
@@ -15,8 +16,8 @@ import java.util.regex.Pattern;
  */
 public class VersuchszweckChecker {
 	//selbst Pattern#compile() aufzurufen erspart, dass wiederholt implizit von String#matches() machen zu lassen
-	private Set<Pattern> dictionary;
-	private Set<Pattern> stopWords;
+	private final Set<Pattern> dictionary;
+	private final Set<Pattern> stopWords;
 	
 	/**
 	 * Versuchszweck eines pubmed-Artikels erkennen durch Auswahl des dafuer wichtigsten Satzes
@@ -75,8 +76,8 @@ public class VersuchszweckChecker {
 	*/
 	VersuchszweckChecker(String dictionaryFile, String stopwordFile){
 
-		dictionary = new HashSet<>();
-		stopWords = new HashSet<>();
+        Set<Pattern> dictionary = new HashSet<>();
+        Set<Pattern> stopWords = new HashSet<>();
 
 		if(stopwordFile != null) {
 			InputStream stopF = this.getClass().getResourceAsStream(stopwordFile);
@@ -86,6 +87,7 @@ public class VersuchszweckChecker {
 				stopWords.add(p);
 			}
 		}
+        this.stopWords = Collections.unmodifiableSet(stopWords);
 
 		InputStream dicF = this.getClass().getResourceAsStream(dictionaryFile);
 		Scanner s_dic = new Scanner(dicF);
@@ -93,5 +95,6 @@ public class VersuchszweckChecker {
 			Pattern p = Pattern.compile(".*"+ s_dic.nextLine(), Pattern.CASE_INSENSITIVE);
 			dictionary.add(p);
 		}
+		this.dictionary = Collections.unmodifiableSet(dictionary);
 	}
 }
