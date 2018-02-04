@@ -9,7 +9,7 @@ import java.util.regex.*;
  * @author Daniel Grund
  */
 public class VersuchszweckChecker {
-	//selbst Pattern#compile() aufzurufen erspart, dass wiederholt implizit von String#matches() machen zu lassen
+	//selbst Pattern#compile() aufzurufen erspart, das wiederholt implizit von String#matches() machen zu lassen
 	private final Set<Pattern> dictionary;
 	private final Set<Pattern> stopWords;
 	
@@ -68,20 +68,16 @@ public class VersuchszweckChecker {
 	 * 
 	 * @param dictionaryFile Pfad zum dictionary mit Here-We-Phrasen
 	 * @param stopwordFile Pfad zur Liste mit Stopworten, null wenn kein Stopwörter genutzt werden sollen
-	 * @throws FileNotFoundException stopwordFile nicht gefunden
-	 * @throws IOException dictionaryFile nicht lesbar
+	 * @throws IOException Input-Datei nicht lesbar
 	 */
-	public VersuchszweckChecker(final File dictionaryFile, final File stopwordFile) throws FileNotFoundException, IOException {
+	public VersuchszweckChecker(final File dictionaryFile, final File stopwordFile) throws IOException {
 		Set<Pattern> dictionary = new HashSet<Pattern>();
 		Set<Pattern> stopWords = new HashSet<Pattern>();
 		
 		if(stopwordFile != null) {
-			//kann Scanner benutzen, weil alle Zeilen frei von Leerzeichen
-			try (Scanner scanner = new Scanner(stopwordFile)) {
-				while(scanner.hasNext()) {
-					Pattern p = Pattern.compile(".*" + scanner.next(), Pattern.CASE_INSENSITIVE);
-					stopWords.add(p);
-				}
+			for(String stopwordEntry : Files.readAllLines(stopwordFile.toPath())) {
+				Pattern p = Pattern.compile(".*" + stopwordEntry, Pattern.CASE_INSENSITIVE);
+				stopWords.add(p);
 			}
 		}
 		this.stopWords = Collections.unmodifiableSet(stopWords);
@@ -93,7 +89,5 @@ public class VersuchszweckChecker {
 		}
 		
 		this.dictionary = Collections.unmodifiableSet(dictionary);
-		
-		
 	}
 }
