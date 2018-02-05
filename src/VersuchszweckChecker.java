@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
 
 
 /**
- * Versucht aus Pubmed-Abstracts den Satz auszuw�hlen, der den Versuchszweck am besten beschreibt.
+ * Versucht aus Pubmed-Abstracts den Satz auszuwaehlen, der den Versuchszweck am besten beschreibt.
  * @author Daniel Grund
  */
 public class VersuchszweckChecker {
@@ -27,7 +27,7 @@ public class VersuchszweckChecker {
 	 * Der erste Satz, fuer den diese Methode true zurueckgibt, beschreibt vermutlich den Versuchszweck am besten.
 	 * Fuer die nachfolgenden Saetze des gleichen Abstracts muss diese Methode dann nicht mehr aufgerufen werden.
 	 * 
-	 * Die Versuchszweck-Saetze mehrere Dokumente k�nnen dann im eigenen Code per beliebigen Verfahren paarweise auf Aehnlichkeit verglichen werden.
+	 * Die Versuchszweck-Saetze mehrere Dokumente koennen dann im eigenen Code per beliebigen Verfahren paarweise auf Aehnlichkeit verglichen werden.
 	 * 
 	 * Diese Methode ist thread-safe.
 	 *  
