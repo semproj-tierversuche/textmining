@@ -11,25 +11,36 @@ We also marked the sentence which most likly describes the experimental purpose.
   
   
 ### Dependencies:  
-- jdom-2.0.6
+Code dependencies:  
+- jdom-2.0.6  
 - mmapi-2.0 --- Metamap API  
+- apache commons-text  
+- apache commons-lang  
   
-store both dependencies under the assets folder  
+Store the Metamap API unter the 'repo' folder which should be located in the project foler.  
+The other ones will be loaded automataclly.  
 
 - a running Metamap Server
 
-### how to build:  
-cd into the src folder  
-javac -classpath "assets/*" *.java  
-jar cvfm ../tm.jar MANIFEST.MF *.class *.properties assets/BioC.dtd assets/stopwords.txt assets/dictionary.txt  
-
-### how to run: 
+### How to build:  
+- **cd** into the project foler  
+  
+- **Before the first build run:**  
+                         mvn install:install-file -Dfile=repo/MetamapAPI.jar \  
+                         -DgroupId=nlm.nih.gov -DartifactId=metamap.nlm.nih.gov -Dversion=2016v2 \   
+                         -Dpackaging=jar  
+- **run:** mvn clean compile assembly:single  
+  
+  
+### How to run: 
 Starting Metamap:  
 - start the skrmed Metamap Server  ( ./bin/skrmedpostctl start )  
 - start the Metamap Server (./bin/mmserver16 )  
   
 In a new Terminal window start our program:  
-- java -jar tm.jar -tm ( >> output file)  
+- java -jar TextMining.jar -tm ( >> output file)  
   
-write the BioC xml into the stdIn. 
-End it with <endAll/> in a new line.  
+write the BioC xml into the stdIn.  
+End it with \<endAll/> in a new line.  
+
+Make sure the BioC.dtd is in the execution directory. 
